@@ -1,0 +1,35 @@
+[package]
+name = "vigilon-api"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Axum REST + WebSocket server and vigilon binary"
+
+[lib]
+name = "vigilon_api"
+path = "src/lib.rs"
+
+[[bin]]
+name = "vigilon"
+path = "src/main.rs"
+
+[dependencies]
+vigilon-core.workspace = true
+vigilon-platform.workspace = true
+vigilon-agent.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+tokio.workspace = true
+axum.workspace = true
+tower-http.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true
+chrono.workspace = true
+anyhow.workspace = true
+futures-util.workspace = true
+csv.workspace = true
+reqwest.workspace = true
+uuid.workspace = true
+
+[dev-dependencies]
+tempfile = "3"

@@ -1,0 +1,37 @@
+[workspace]
+resolver = "2"
+members = ["core", "platform", "agent", "api"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/vigilon/vigilon"
+rust-version = "1.85"
+
+[workspace.dependencies]
+vigilon-core = { path = "core" }
+vigilon-platform = { path = "platform" }
+vigilon-agent = { path = "agent" }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+tokio = { version = "1", features = ["full"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+chrono = { version = "0.4", features = ["serde"] }
+uuid = { version = "1", features = ["v4", "serde"] }
+thiserror = "2"
+anyhow = "1"
+sqlx = { version = "0.8", features = ["runtime-tokio", "sqlite", "chrono", "migrate"] }
+sysinfo = "0.37"
+netstat2 = "0.11"
+axum = { version = "0.8", features = ["ws"] }
+tower-http = { version = "0.6", features = ["cors", "fs", "trace"] }
+futures-util = "0.3"
+hostname = "0.4"
+nvml-wrapper = "0.11"
+starship-battery = "0.10"
+csv = "1.3"
+maxminddb = "0.24"
+reqwest = { version = "0.12", features = ["json"] }
+winrt-notification = "0.5"

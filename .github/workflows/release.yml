@@ -1,0 +1,72 @@
+# Release — build + upload per-OS binaries and frontend bundle on tags.
+#
+# Push a tag like `v0.1.0` to publish. Maintainer checklist before tagging:
+# eval suite green, CHANGELOG entry, `cargo audit` clean.
+
+name: release
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  binaries:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+            bin: vigilon
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc
+            bin: vigilon.exe
+          - os: macos-latest
+            target: aarch64-apple-darwin
+            bin: vigilon
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo build -p vigilon-api --release --locked --target ${{ matrix.target }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: vigilon-${{ matrix.target }}
+          path: target/${{ matrix.target }}/release/${{ matrix.bin }}
+
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - run: npm run build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: vigilon-frontend-dist
+          path: frontend/dist
+
+  publish:
+    needs: [binaries, frontend]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: artifacts/**/*
+          generate_release_notes: true

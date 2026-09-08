@@ -1,0 +1,14 @@
+/target
+**/*.rs.bk
+.idea/
+.vscode/
+.DS_Store
+data/
+*.db
+*.db-wal
+*.db-shm
+frontend/node_modules/
+frontend/dist/
+.env
+.env.local
+.vigilon/
