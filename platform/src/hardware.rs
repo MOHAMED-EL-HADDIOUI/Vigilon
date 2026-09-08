@@ -299,10 +299,10 @@ fn macos_sysctl(key: &str) -> Option<String> {
     static CACHE: std::sync::OnceLock<std::sync::Mutex<std::collections::HashMap<String, String>>> =
         std::sync::OnceLock::new();
     let cache = CACHE.get_or_init(|| std::sync::Mutex::new(std::collections::HashMap::new()));
-    if let Ok(g) = cache.lock() {
-        if let Some(v) = g.get(key) {
-            return Some(v.clone());
-        }
+    if let Ok(g) = cache.lock()
+        && let Some(v) = g.get(key)
+    {
+        return Some(v.clone());
     }
     let out = std::process::Command::new("/usr/sbin/sysctl")
         .args(["-n", key])
